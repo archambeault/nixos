@@ -1,9 +1,10 @@
 { config, lib, pkgs, ... }:
 
+ 
 {
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
-
+  
   hardware.opengl = {
     enable = true;
     driSupport = true;
@@ -30,6 +31,8 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  virtualisation.libvirtd.enable = true;
+  
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
 
@@ -71,7 +74,7 @@
     pulse.enable = true;
     jack.enable = true;
 
-    # use the example session manager (no others are packaged yet so this is enabled by default,
+     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
@@ -83,7 +86,7 @@
   users.users.daniel = {
     isNormalUser = true;
     description = "daniel archambo";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" ];
     packages = with pkgs; [
       firefox-beta
     ];
@@ -99,22 +102,39 @@
 
   environment.systemPackages = with pkgs; [
 
-  pkgs.btrfs-progs
-  pkgs.wget
-  pkgs.wineWowPackages.waylandFull
-  pkgs.winetricks
-  pkgs.gitFull 
-  pkgs.gparted
-  pkgs.gnome.gnome-tweaks
-  pkgs.protonvpn-gui
-  pkgs.protonmail-bridge
-  pkgs.discord
+  btrfs-progs
+  wget
+  wineWowPackages.waylandFull
+  winetricks
+  gitFull 
+  gparted
+  gnome.gnome-tweaks
+  protonvpn-gui
+  protonmail-bridge
+  qemu
+  virt-manager
+  libvirt
+  btop
+  cudaPackages.cudatoolkit
+  cudaPackages.cudnn
+  cudaPackages.cutensor
+  nvidia-vaapi-driver
+  ffmpeg-full
+  alsa-scarlett-gui
+  obs-studio
+  easyeffects
+  discord
+  plex
   ];
 
   programs.steam = {
    enable = true;
    remotePlay.openFirewall = true;
    dedicatedServer.openFirewall = true;
+  };
+
+  programs.virt-manager = {
+   enable = true;
   };
 
   # Some programs need SUID wrappers, can be configured further or are
